@@ -1,28 +1,45 @@
-# import nltk
-# from nltk.corpus import stopwords
-# stopwords = stopwords.words('english')
+import nltk
+from nltk.corpus import stopwords
+stopwords = stopwords.words('english')
 
-# for i in range(1, 1401):
-#     file_no = str(i).zfill(4)
-#     path = 'Q1_files/cranfield' + file_no
-#     f = open(path, 'r')
+def printContents(f):
+    for i in f:
+        print(i)
 
-#     new_file = ''
+for i in range(1, 1401):
+    file_no = str(i).zfill(4)
+    path = 'Q1_files/cranfield' + file_no
+    f = open(path, 'r')
 
-#     for line in f:
-#         line = line.strip()
-#         new_file += line.lower()
+    new_file = ''
 
-#     new_file = nltk.word_tokenize(new_file)    
+    for line in f:
+        line = line.strip()
+        new_file += line.lower()
 
-#     temp_file = []
+    new_file = nltk.word_tokenize(new_file)    
 
-#     for i in new_file:
-#         if i in stopwords or (not i.isalpha()):
-#             continue
-#         temp_file.append(i)
+    temp_file = []
 
-#     f.close()    
+    for x in new_file:
+        if x in stopwords or (not x.isalpha()):
+            continue
+        temp_file.append(x)
 
-#     f = open(path, 'w')
-#     f.write(str(temp_file))
+    f.close()    
+
+    if i in range(1,6):
+            print("File " + str(i) + " before preprocessing: ")
+            f = open(path, 'r')     
+            printContents(f)
+            print()
+        
+    f.close()
+
+    if i in range(1,6):
+        print("File " + str(i) + " after preprocessing: ")
+        print(temp_file)
+        print()
+
+    f = open(path, 'w')
+    f.write(str(temp_file))
