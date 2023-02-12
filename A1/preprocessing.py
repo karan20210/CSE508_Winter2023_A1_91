@@ -1,28 +1,66 @@
-# import nltk
-# from nltk.corpus import stopwords
-# stopwords = stopwords.words('english')
+import nltk
+from nltk.corpus import stopwords
+stopwords = stopwords.words('english')
 
-# for i in range(1, 1401):
-#     file_no = str(i).zfill(4)
-#     path = 'Q1_files/cranfield' + file_no
-#     f = open(path, 'r')
+def printContents(f):
+    for i in f:
+        print(i)
 
-#     new_file = ''
+for i in range(1, 1401):
+    file_no = str(i).zfill(4)
+    path = 'Q1_files/cranfield' + file_no
+    f = open(path, 'r')
 
-#     for line in f:
-#         line = line.strip()
-#         new_file += line.lower()
+    new_file = ''
 
-#     new_file = nltk.word_tokenize(new_file)    
+    if i in range(1,6):
+        print("File " + str(i) + " before lowercasing: ")
+        printContents(f)
+        print()
+    
+    f.close()
+    f = open(path, 'r')
 
-#     temp_file = []
+    for line in f:
+        line = line.strip()
+        new_file += line.lower()
+    
+    if i in range(1,6):
+        print("File " + str(i) + " after lowercasing: ")
+        print(new_file)
+        print()
 
-#     for i in new_file:
-#         if i in stopwords or (not i.isalpha()):
-#             continue
-#         temp_file.append(i)
+    new_file = nltk.word_tokenize(new_file) 
+    if i in range(1,6):   
+        print("File " + str(i) + " after tokenization: ")
+        print(new_file)
+        print()
 
-#     f.close()    
+    temp_file = []
 
-#     f = open(path, 'w')
-#     f.write(str(temp_file))
+    for x in new_file:
+        if x in stopwords:
+            continue
+        temp_file.append(x)
+
+    if i in range(1,6):
+        print("File " + str(i) + " after removing stopwords: ")
+        print(temp_file)
+        print()
+
+    new_file = temp_file
+    temp_file = []
+    for x in new_file:
+        if (not x.isalpha()):
+            continue
+        temp_file.append(x)
+
+    if i in range(1,6):
+        print("File " + str(i) + " after removing punctuations and blank space tokens: ")
+        print(temp_file)
+        print()
+
+    f.close()    
+
+    f = open(path, 'w')
+    f.write(str(temp_file))
