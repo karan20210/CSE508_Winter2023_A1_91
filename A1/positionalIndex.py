@@ -45,5 +45,3 @@ for i in range(1,1401):
 dbfile = open('positionalIndexPickle', 'ab')
 pickle.dump(posIndex, dbfile)
 dbfile.close()
-
-print(posIndex['experimental'].printIndexElement())
