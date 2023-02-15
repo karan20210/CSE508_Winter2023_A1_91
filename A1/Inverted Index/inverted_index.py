@@ -21,7 +21,7 @@ class InvertedIndexElement:
 d = {}
 for i in range(1,1401):    
     file_no = str(i).zfill(4)
-    path = 'Q1_files/cranfield' + file_no
+    path = '../Q1_files/cranfield' + file_no
     f = open(path, 'r')
     x = []
     for z in f:
