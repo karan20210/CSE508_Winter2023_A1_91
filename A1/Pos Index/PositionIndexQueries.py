@@ -86,12 +86,7 @@ for q in range(n):
 
     print("Number of documents retrieved for query " + str(q + 1) + " using positional index: " + str(len(answer_docs)))
     print()
-    print("Names of documents retrieved for query 1 " + str(q+1) + " using positional index: " + str(doc_names))
-    # print(sorted(answer_docs))
-
-
-    
-
+    print("Names of documents retrieved for query " + str(q+1) + " using positional index: " + str(doc_names))
 
 # Get AND of all 3 words to get candidate docs
 # Store all positions of car and then iterate over the rest tokens

@@ -22,11 +22,6 @@ class InvertedIndexElement:
     def getDocIds(self):
         return self.docIds
 
-
-def getList(x):
-    print(db[x].printIndexElement())
-
-
 def NOT(x):
     try:
         doc_ids = db[x].getDocIds()
@@ -37,28 +32,55 @@ def NOT(x):
     return list(total_docs.difference(doc_ids))
 
 def AND(a, b):
-    a = set(a)
-    b = set(b)
-    final = []
-    c = 0
-
-    for i in a:
-        if i in b:
-            c+=1
-            final.append(i)
-    return list(set(final)), c
+    a = sorted(a)
+    b = sorted(b)
+    comparisons = 0
+    final_list = []
+    pa = 0
+    pb = 0
+    
+    while pa<len(a) and pb<len(b):
+        comparisons+=1
+        if(a[pa] < b[pb]):            
+            pa+=1
+        elif(a[pa] > b[pb]):
+            pb+=1
+        else:
+            final_list.append(a[pa])
+            pa+=1
+            pb+=1
+    
+    return final_list, comparisons
 
 def OR(a, b):
-    a = set(a)
-    b = set(b)
-    final = []
-
-    for i in a:
-        final.append(a)
-    for i in b:
-        if i not in final:
-            final.append(b)
-    return list(set(final))
+    a = sorted(a)
+    b = sorted(b)
+    comparisons = 0
+    final_list = []
+    pa = 0
+    pb = 0
+    
+    while pa<len(a) and pb<len(b):
+        comparisons+=1
+        if(a[pa] < b[pb]):
+            final_list.append(a[pa])            
+            pa+=1
+        elif(a[pa] > b[pb]):
+            final_list.append(b[pb])
+            pb+=1
+        else:
+            final_list.append(a[pa])
+            pa+=1
+            pb+=1
+    
+    while pa<len(a):
+        final_list.append(a[pa])
+        pa+=1
+    while pb<len(b):
+        final_list.append(b[pb])
+        pb+=1
+    
+    return final_list, comparisons
 
 def generate_words_and_tokens(q):
     words = []
@@ -72,7 +94,6 @@ def generate_words_and_tokens(q):
 
     return words, commands
 
-
 def generate_NOT_list(words, commands):
     tup = []
     while 'NOT' in commands:
@@ -83,7 +104,6 @@ def generate_NOT_list(words, commands):
         commands.pop(i)
         words[i] = i
     return tup
-
 
 def operations(words, commands, tup):
     a = db[words[0]].getDocIds()
@@ -96,28 +116,25 @@ def operations(words, commands, tup):
         else:
             b = db[words[i]].getDocIds()
         if commands[i].upper() == 'AND':
-            a, c = AND(a,b)
-            # a = set(a).intersection(set(b))
-            # comparisons += min(len(set(a)), len(set(b)))
+            a, c = AND(a,b)            
             comparisons += c
         elif commands[i].upper() == 'OR':
-            a = OR(a,b)
-            # a = set(a).union(set(b))
-            comparisons += max(len(set(a)), len(set(b)))
+            a,c  = OR(a,b)           
+            comparisons += c
         else:
             print("Invalid Command")
 
     return a, comparisons
 
-
 def execute(query):
 
     query_words, commands = generate_words_and_tokens(query)
     tup = generate_NOT_list(query_words, commands)
-
-    final_set = operations(query_words, commands, tup)
+    try:
+        final_set = operations(query_words, commands, tup)
+    except:
+        return [], 0
     return final_set
-
 
 def preprocess(s):
     new = []
@@ -129,7 +146,6 @@ def preprocess(s):
             continue
         new.append(i)
     return new
-
 
 dbfile = open('invertedIndexPickle', 'rb')
 db = pickle.load(dbfile)
@@ -158,5 +174,5 @@ for i in range(n):
     print("Number of documents retrieved for query " +
           str(i) + ': ' + str(len(answer)))
     print("Names of documents for query " + str(i) + ': ' + doc_names)
-    print("Names of comparisons required for query " +
+    print("No. of comparisons required for query " +
           str(i) + ': ' + str(comparisons))
