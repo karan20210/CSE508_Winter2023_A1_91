@@ -56,7 +56,7 @@ for q in range(n):
         print("Number of documents retrieved for query " + str(q + 1) + " using positional index: " + '0')
         print()
         print("Names of documents retrieved for query 1 " + str(q+1) + " using positional index: ")
-        exit(0)
+        continue
 
     for i in range(1, len(words)):
         try:
@@ -65,20 +65,19 @@ for q in range(n):
              print("Number of documents retrieved for query " + str(q + 1) + " using positional index: " + '0')
              print()
              print("Names of documents retrieved for query 1 " + str(q+1) + " using positional index: ")
-             exit(0)
+             continue
         candidate_docs = candidate_docs.intersection(set(docs_of_word))
 
-    answer_docs = []
-
+    answer_docs = []    
     for i in candidate_docs:
         pos_w0 = db[words[0]].getPosFromDoc(i)    
         temp_pos = set(pos_w0)
         for j in range(1, len(words)):
             pos_wj = db[words[j]].getPosFromDoc(i)        
-            pos_wj = [x - 1 for x in pos_wj]
-            temp_pos = temp_pos.intersection(set(pos_wj))    
-            if(len(temp_pos) != 0):
-                answer_docs.append(i)
+            pos_wj = [x - j for x in pos_wj]
+            temp_pos = temp_pos.intersection(set(pos_wj))                
+        if(len(temp_pos) != 0):
+            answer_docs.append(i)
 
     doc_names = ''
     for x in sorted(answer_docs):
