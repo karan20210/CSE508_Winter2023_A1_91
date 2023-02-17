@@ -163,10 +163,10 @@ for i in range(n):
         temp_pos = set(pos_w0)
         for j in range(1, len(words)):
             pos_wj = pos_db[words[j]].getPosFromDoc(x)        
-            pos_wj = [y - 1 for y in pos_wj]
+            pos_wj = [y - j for y in pos_wj]
             temp_pos = temp_pos.intersection(set(pos_wj))    
-            if(len(temp_pos) != 0):
-                answer_docs.append(x)
+        if(len(temp_pos) != 0):
+            answer_docs.append(x)
 
     doc_names = ''
     for x in sorted(answer_docs):
